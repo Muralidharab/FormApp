@@ -1,23 +1,38 @@
-import logo from './logo.svg';
+import React,{useState} from 'react'
 import './App.css';
+import UserForm from './components/Userform1';
+import UserTable from './components/UserTable';
+
+
+// =============== Getting Data From Local Storage =================
+const getLocalData = ()=>{
+  let data = localStorage.getItem('userData')
+  if(data){
+    return JSON.parse(localStorage.getItem('userData'))
+  }
+  else{
+    return []
+  }
+}
 
 function App() {
+  const [userFormData, setuserFormData] = useState(getLocalData())
+  const getUserData =(userData)=>{ 
+    const userFormDataCopy = [...userFormData]
+    
+    userFormDataCopy.push(userData)
+    
+    setuserFormData(userFormDataCopy)
+
+// ================== Setting Data From Local Storage ====================
+    localStorage.setItem('userData',JSON.stringify(userFormDataCopy))
+
+  }
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <UserForm getUserData={getUserData}/>
+    <UserTable userFormData={userFormData}/>
+
     </div>
   );
 }
